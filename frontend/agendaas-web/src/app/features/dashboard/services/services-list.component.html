@@ -1,0 +1,50 @@
+<section class="page">
+  <h3>Serviços</h3>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" formControlName="name" maxlength="120" />
+      </div>
+      <div class="field">
+        <label>Preço</label>
+        <input type="number" step="0.01" formControlName="price" />
+      </div>
+      <div class="field">
+        <label>Duração</label>
+        <input type="time" step="1" formControlName="duration" />
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Adicionar</button>
+    </form>
+  </div>
+
+  <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Duração</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of services()">
+          <td>{{ s.name }}</td>
+          <td>{{ s.price | number:'1.2-2' }}</td>
+          <td>{{ s.duration }}</td>
+          <td>
+            <span class="badge" [class.badge-success]="s.isActive" [class.badge-muted]="!s.isActive">
+              {{ s.isActive ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td><button class="btn btn-danger" (click)="deactivate(s.id)" *ngIf="s.isActive">Desativar</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

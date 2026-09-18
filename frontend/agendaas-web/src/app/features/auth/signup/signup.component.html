@@ -1,0 +1,28 @@
+<div class="auth-page">
+  <div class="card auth-card">
+    <h2>Criar conta</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Nome do salão</label>
+        <input type="text" formControlName="salonName" maxlength="120" />
+      </div>
+      <div class="field">
+        <label>Seu nome</label>
+        <input type="text" formControlName="ownerName" maxlength="120" />
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" formControlName="email" maxlength="150" />
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" formControlName="password" maxlength="72" />
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="form.invalid">Cadastrar</button>
+    </form>
+
+    <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    <p><a routerLink="/login">Já tem conta? Entrar</a></p>
+  </div>
+</div>

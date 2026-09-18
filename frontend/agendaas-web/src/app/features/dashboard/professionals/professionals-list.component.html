@@ -1,0 +1,48 @@
+<section class="page">
+  <h3>Profissionais</h3>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" formControlName="name" maxlength="120" />
+      </div>
+      <div class="field">
+        <label>Início do expediente</label>
+        <input type="time" step="1" formControlName="workStart" />
+      </div>
+      <div class="field">
+        <label>Fim do expediente</label>
+        <input type="time" step="1" formControlName="workEnd" />
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Adicionar</button>
+    </form>
+  </div>
+
+  <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Expediente</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of professionals()">
+          <td>{{ p.name }}</td>
+          <td>{{ p.workStart }} - {{ p.workEnd }}</td>
+          <td>
+            <span class="badge" [class.badge-success]="p.isActive" [class.badge-muted]="!p.isActive">
+              {{ p.isActive ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td><button class="btn btn-danger" (click)="deactivate(p.id)" *ngIf="p.isActive">Desativar</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

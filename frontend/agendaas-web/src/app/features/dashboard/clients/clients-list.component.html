@@ -1,0 +1,42 @@
+<section class="page">
+  <h3>Clientes</h3>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" formControlName="name" maxlength="120" />
+      </div>
+      <div class="field">
+        <label>Telefone</label>
+        <input type="text" formControlName="phone" appPhoneMask maxlength="15" placeholder="(21) 99999-9999" />
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" formControlName="email" maxlength="150" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">{{ editingId() ? 'Salvar' : 'Adicionar' }}</button>
+        <button class="btn btn-ghost" type="button" *ngIf="editingId()" (click)="cancelEdit()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of clients()">
+          <td>{{ c.name }}</td>
+          <td>{{ c.phone }}</td>
+          <td>{{ c.email }}</td>
+          <td><button class="btn btn-ghost" (click)="startEdit(c)">Editar</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

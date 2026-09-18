@@ -1,0 +1,20 @@
+<div class="auth-page">
+  <div class="card auth-card">
+    <h2>Entrar</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" formControlName="email" maxlength="150" />
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" formControlName="password" maxlength="72" />
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="form.invalid">Entrar</button>
+    </form>
+
+    <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    <p><a routerLink="/signup">Não tem conta? Cadastrar</a></p>
+  </div>
+</div>

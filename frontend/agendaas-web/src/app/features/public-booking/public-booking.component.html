@@ -1,0 +1,75 @@
+<div class="page" *ngIf="tenantInfo() as info; else loadingOrError">
+  <h2>{{ info.name }}</h2>
+
+  <ng-container *ngIf="!confirmedAppointment(); else confirmed">
+    <div class="card">
+      <form [formGroup]="searchForm">
+        <div class="field">
+          <label>Serviço</label>
+          <select formControlName="serviceId">
+            <option value="" disabled>Selecione</option>
+            <option *ngFor="let s of info.services" [value]="s.id">{{ s.name }} - R$ {{ s.price }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Profissional</label>
+          <select formControlName="professionalId">
+            <option value="" disabled>Selecione</option>
+            <option *ngFor="let p of info.professionals" [value]="p.id">{{ p.name }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Data</label>
+          <input type="date" formControlName="date" />
+        </div>
+      </form>
+
+      <div *ngIf="searchForm.valid && availableSlots().length > 0">
+        <label>Horários disponíveis</label>
+        <div class="slot-grid">
+          <button *ngFor="let slot of availableSlots()"
+                  type="button"
+                  (click)="selectedSlot.set(slot)"
+                  [disabled]="selectedSlot() === slot">
+            {{ slot | date:'shortTime' }}
+          </button>
+        </div>
+      </div>
+
+      <p *ngIf="searchForm.valid && availableSlots().length === 0">Nenhum horário disponível nessa data.</p>
+    </div>
+
+    <div class="card" *ngIf="selectedSlot()">
+      <form [formGroup]="clientForm" (ngSubmit)="confirmBooking()">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" formControlName="clientName" maxlength="120" />
+        </div>
+        <div class="field">
+          <label>Telefone</label>
+          <input type="text" formControlName="clientPhone" appPhoneMask maxlength="15" placeholder="(21) 99999-9999" />
+        </div>
+        <div class="field">
+          <label>E-mail (opcional)</label>
+          <input type="email" formControlName="clientEmail" maxlength="150" />
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" [disabled]="clientForm.invalid">Confirmar agendamento</button>
+      </form>
+    </div>
+
+    <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+  </ng-container>
+
+  <ng-template #confirmed>
+    <div class="card">
+      <p>Agendamento confirmado para {{ confirmedAppointment()?.startTime | date:'short' }}!</p>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loadingOrError>
+  <div class="page">
+    <p *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    <p *ngIf="!errorMessage()">Carregando...</p>
+  </div>
+</ng-template>

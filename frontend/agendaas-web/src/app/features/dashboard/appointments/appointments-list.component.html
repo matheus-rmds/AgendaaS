@@ -1,0 +1,60 @@
+<section class="page">
+  <h3>Agenda</h3>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Profissional</label>
+        <select formControlName="professionalId">
+          <option value="" disabled>Selecione</option>
+          <option *ngFor="let p of professionals()" [value]="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Serviço</label>
+        <select formControlName="serviceId">
+          <option value="" disabled>Selecione</option>
+          <option *ngFor="let s of services()" [value]="s.id">{{ s.name }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Cliente</label>
+        <select formControlName="clientId">
+          <option value="" disabled>Selecione</option>
+          <option *ngFor="let c of clients()" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Data e hora</label>
+        <input type="datetime-local" formControlName="startTime" />
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Agendar</button>
+    </form>
+  </div>
+
+  <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Profissional</th><th>Serviço</th><th>Cliente</th><th>Início</th><th>Fim</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of appointments()">
+          <td>{{ professionalName(a.professionalId) }}</td>
+          <td>{{ serviceName(a.serviceId) }}</td>
+          <td>{{ clientName(a.clientId) }}</td>
+          <td>{{ a.startTime | date:'short' }}</td>
+          <td>{{ a.endTime | date:'short' }}</td>
+          <td>
+            <select (change)="updateStatus(a.id, $any($event.target).value)">
+              <option *ngFor="let opt of statusOptions" [value]="opt" [selected]="opt === a.status">{{ opt }}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
