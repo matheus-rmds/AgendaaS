@@ -1,0 +1,6 @@
+@AgendaaS.Api_HostAddress = http://localhost:5023
+
+GET {{AgendaaS.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

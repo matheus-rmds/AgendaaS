@@ -1,0 +1,16 @@
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+*.user
+
+# Angular / Node
+**/node_modules/
+**/dist/
+**/.angular/
+npm-debug.log*
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/

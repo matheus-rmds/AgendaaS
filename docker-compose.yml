@@ -1,0 +1,47 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: agendaas-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SenhaTeste123!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"SenhaTeste123!\" -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend/AgendaaS
+      dockerfile: AgendaaS.Api/Dockerfile
+    container_name: agendaas-api
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=AgendaaSDb;User Id=sa;Password=SenhaTeste123!;TrustServerCertificate=True"
+      JwtSettings__Secret: "segredo-apenas-para-teste-local-via-docker"
+      JwtSettings__Issuer: "AgendaaS"
+      JwtSettings__Audience: "AgendaaS"
+      JwtSettings__ExpirationInHours: "8"
+    ports:
+      - "5000:8080"
+
+  web:
+    build:
+      context: ./frontend/agendaas-web
+      dockerfile: Dockerfile
+    container_name: agendaas-web
+    depends_on:
+      - api
+    ports:
+      - "4200:80"
+
+volumes:
+  sqlserver-data:
